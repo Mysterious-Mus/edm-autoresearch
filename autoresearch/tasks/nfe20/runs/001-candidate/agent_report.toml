@@ -1,0 +1,33 @@
+[proposal]
+name = "stochastic-heun-edm-nfe20"
+hypothesis = "Introduce moderate stochasticity via S_churn to potentially improve sample diversity and FID, while keeping the same NFE budget."
+timestep_or_noise_schedule = "edm discretization with linear sigma schedule, same as baseline"
+update_rule = "stochastic heun with controlled noise injection"
+solver_type = "heun"
+stochastic_updates = "enabled with S_churn=40, S_min=0.05, S_max=50, S_noise=1"
+budget_allocation = "maximum number of Heun steps under the fixed NFE budget, same as baseline"
+score_manipulation = "none"
+
+[sampler]
+solver = "heun"
+discretization = "edm"
+schedule = "linear"
+scaling = "none"
+rho = 7
+S_churn = 40
+S_min = 0.05
+S_max = 50
+S_noise = 1
+
+[result]
+status = "completed"
+fid = 10.7674
+fid_enabled = true
+nfe_budget = 20
+actual_nfe = 19
+num_steps = 10
+seed_count = 5000
+solver = "heun"
+generation_seconds = 43.375
+fid_seconds = 9.792
+completed_at = "2026-04-28T12:53:24Z"

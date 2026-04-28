@@ -1,0 +1,33 @@
+[proposal]
+name = "edm-linear-euler-churn-nfe50"
+hypothesis = "Switching to Euler solver with moderate stochasticity may improve FID by trading off some accuracy for more steps within the NFE budget, allowing finer trajectory discretization and potential better sample quality."
+timestep_or_noise_schedule = "edm discretization with linear sigma schedule"
+update_rule = "euler"
+solver_type = "euler"
+stochastic_updates = "enabled with S_churn=15, S_min=0.05, S_max=50, S_noise=1.003"
+budget_allocation = "Maximum number of Euler steps under the fixed NFE budget, allowing approximately double the steps compared to Heun for finer schedule coverage."
+score_manipulation = "none"
+
+[sampler]
+solver = "euler"
+discretization = "edm"
+schedule = "linear"
+scaling = "none"
+rho = 7
+S_churn = 15
+S_min = 0.05
+S_max = 50
+S_noise = 1.003
+
+[result]
+status = "completed"
+fid = 13.3702
+fid_enabled = true
+nfe_budget = 50
+actual_nfe = 50
+num_steps = 50
+seed_count = 5000
+solver = "euler"
+generation_seconds = 99.045
+fid_seconds = 9.952
+completed_at = "2026-04-28T13:13:22Z"

@@ -12,7 +12,6 @@ import click
 import tqdm
 import pickle
 import numpy as np
-import scipy.linalg
 import torch
 import dnnlib
 from torch_utils import distributed as dist
@@ -77,12 +76,35 @@ def calculate_inception_stats(
     sigma /= len(dataset_obj) - 1
     return mu.cpu().numpy(), sigma.cpu().numpy()
 
-#----------------------------------------------------------------------------
+def trace_sqrt_product(sigma, sigma_ref, eps=1e-10):
+    # For symmetric positive semidefinite covariances A and B,
+    # eig(A B) == eig(sqrt(A) B sqrt(A)).  The latter is symmetric, so we can
+    # use faster and more stable Hermitian eigensolvers and only compute the
+    # trace needed by FID.
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    with torch.no_grad():
+        sigma = torch.as_tensor(sigma, dtype=torch.float64, device=device)
+        sigma_ref = torch.as_tensor(sigma_ref, dtype=torch.float64, device=device)
+        sigma = (sigma + sigma.T) * 0.5
+        sigma_ref = (sigma_ref + sigma_ref.T) * 0.5
+        eigvals, eigvecs = torch.linalg.eigh(sigma)
+        keep = eigvals > eps
+        if not torch.any(keep):
+            return 0.0
+        sqrt_eigvals = eigvals[keep].sqrt()
+        eigvecs = eigvecs[:, keep]
+        middle = eigvecs.T @ sigma_ref @ eigvecs
+        middle *= sqrt_eigvals[:, None]
+        middle *= sqrt_eigvals[None, :]
+        middle = (middle + middle.T) * 0.5
+        product_eigvals = torch.linalg.eigvalsh(middle)
+        return float(product_eigvals.clamp_min(0).sqrt().sum().cpu())
+
 
 def calculate_fid_from_inception_stats(mu, sigma, mu_ref, sigma_ref):
     m = np.square(mu - mu_ref).sum()
-    s, _ = scipy.linalg.sqrtm(np.dot(sigma, sigma_ref), disp=False)
-    fid = m + np.trace(sigma + sigma_ref - s * 2)
+    trace_covmean = trace_sqrt_product(sigma, sigma_ref)
+    fid = m + np.trace(sigma) + np.trace(sigma_ref) - trace_covmean * 2
     return float(np.real(fid))
 
 #----------------------------------------------------------------------------

@@ -1,0 +1,1 @@
+/opt/conda/bin/python /workspaces/edm/generate.py --outdir=/workspaces/edm/autoresearch/experiments/smoke-nfe20/images --seeds=0-3 --batch=4 --steps=10 --network=https://nvlabs-fi-cdn.nvidia.com/edm/pretrained/baseline/baseline-cifar10-32x32-uncond-vp.pkl --rho=7 --S_churn=0 --S_min=0 --S_max=inf --S_noise=1 --solver=heun --disc=edm --schedule=linear --scaling=none

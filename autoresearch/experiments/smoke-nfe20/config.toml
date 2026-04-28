@@ -1,0 +1,25 @@
+# Agent-editable experiment config.
+# This file lists the sampling aspects allowed by the assignment. Values that
+# are not directly supported by generate.py are recorded as proposal metadata.
+
+[proposal]
+name = "smoke-nfe20-heun-edm"
+hypothesis = "Verify the experiment harness with the baseline EDM-style Heun sampler under the fixed NFE budget."
+timestep_or_noise_schedule = "edm discretization with linear sigma schedule"
+update_rule = "heun"
+solver_type = "heun"
+stochastic_updates = "disabled"
+budget_allocation = "maximum number of Heun steps under the fixed NFE budget"
+score_manipulation = "none"
+
+[sampler]
+# Direct generate.py sampler knobs.
+solver = "heun"
+discretization = "edm"
+schedule = "linear"
+scaling = "none"
+rho = 7
+S_churn = 0
+S_min = 0
+S_max = inf
+S_noise = 1

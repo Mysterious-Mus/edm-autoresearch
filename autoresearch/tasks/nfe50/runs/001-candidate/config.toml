@@ -1,0 +1,20 @@
+[proposal]
+name = "ve-linear-heun-nfe50"
+hypothesis = "Testing VE discretization with linear schedule, which may provide a different noise trajectory and improve sample quality under the same NFE budget."
+timestep_or_noise_schedule = "ve discretization with linear sigma schedule"
+update_rule = "heun"
+solver_type = "heun"
+stochastic_updates = "disabled"
+budget_allocation = "maximum number of Heun steps under the fixed NFE budget"
+score_manipulation = "none"
+
+[sampler]
+solver = "heun"
+discretization = "ve"
+schedule = "linear"
+scaling = "none"
+rho = 7
+S_churn = 0
+S_min = 0
+S_max = inf
+S_noise = 1

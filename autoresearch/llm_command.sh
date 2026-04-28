@@ -1,0 +1,1 @@
+export AUTORESEARCH_LLM_CMD='python autoresearch/openai_compatible_next_config.py'

@@ -1,0 +1,86 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{AutoResearch Agent for Diffusion Sampling on CIFAR-10}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Setup and Baselines}
+
+This experiment studies sampler-only modifications for the fixed CIFAR-10 diffusion model. The network architecture, pretrained checkpoint, dataset, reference statistics, and random seeds are fixed. The AutoResearch agent is allowed to change only sampler choices such as the noise schedule, solver, stochasticity parameters, and budget allocation. Each reported run uses 5,000 generated samples and the course CIFAR-10 FID reference statistics.
+
+Two NFE budgets are evaluated: a low-budget case with NFE $\leq 20$ and a moderate-budget case with NFE $\leq 50$. The baseline in both cases is the EDM-style Heun sampler with EDM discretization, a linear sigma schedule, no stochastic churn, no score manipulation, and $\rho=7$.
+
+\begin{table}[h]
+\centering
+\caption{Baseline and best observed FID by budget. Lower FID is better.}
+\begin{tabular}{lrrrrr}
+\toprule
+Budget & Baseline run & Baseline FID & Best run & Best FID & Improvement \\
+\midrule
+NFE $\leq 20$ & 000-baseline & 55.9529 & 004-candidate & 10.1439 & 45.8090 \\
+NFE $\leq 50$ & 000-baseline & 7.6761 & 000-baseline & 7.6761 & 0.0000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The NFE 20 baseline used 10 Heun steps and 19 actual function evaluations. Its FID was 55.9529, indicating that the deterministic low-budget trajectory was poor for this model. The NFE 50 baseline used 25 Heun steps and 49 actual function evaluations. Its FID was 7.6761, which was already strong relative to the explored alternatives.
+
+\section{AutoResearch Process}
+
+The AutoResearch loop generated a proposal, ran image generation and FID evaluation, recorded an agent report, and used the accumulated reports to propose the next sampler. The aggregated report files are \texttt{agent\_answers/aggregated\_agent\_reports.json} and \texttt{agent\_answers/aggregated\_agent\_reports.md}. The agent completed five NFE 20 runs and four NFE 50 runs.
+
+\begin{table}[h]
+\centering
+\caption{NFE 20 experiments.}
+\begin{tabular}{llrr}
+\toprule
+Run & Main sampler change & Actual NFE & FID \\
+\midrule
+000-baseline & Deterministic EDM Heun & 19 & 55.9529 \\
+001-candidate & Heun with churn 40, range 0.05--50 & 19 & 10.7674 \\
+002-candidate & Heun with reduced churn 20, range 0.02--30 & 19 & 10.9438 \\
+003-candidate & Heun with increased churn 60, range 0.10--80 & 19 & 10.7248 \\
+004-candidate & Heun with very high churn 80, range 0.15--100 & 19 & 10.1439 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{NFE 50 experiments.}
+\begin{tabular}{llrr}
+\toprule
+Run & Main sampler change & Actual NFE & FID \\
+\midrule
+000-baseline & Deterministic EDM Heun & 49 & 7.6761 \\
+001-candidate & VE discretization with linear Heun & 49 & 8.3139 \\
+002-candidate & Heun with churn 20, range 0.05--50 & 49 & 7.7890 \\
+003-candidate & Euler with churn 15 and 50 steps & 50 & 13.3702 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Which Changes Helped}
+
+The clearest positive result was stochastic churn under the NFE 20 budget. All four stochastic Heun candidates substantially improved over the deterministic baseline, reducing FID from 55.9529 to the range 10.1439--10.9438. The best NFE 20 run used a high stochasticity setting with \texttt{S\_churn=80}, \texttt{S\_min=0.15}, \texttt{S\_max=100}, and \texttt{S\_noise=1}. This was an absolute FID improvement of 45.8090, or 81.8706 percent relative to the baseline.
+
+For NFE 50, none of the explored changes improved on the baseline. Changing the discretization to VE made FID worse, moving from 7.6761 to 8.3139. Adding moderate stochastic churn was close to the baseline but still slightly worse at 7.7890. Switching to Euler with churn performed poorly at 13.3702 despite using 50 actual function evaluations, suggesting that the extra first-order steps did not compensate for the loss of Heun's correction step in this setting.
+
+\section{Interpretation}
+
+The two budgets behaved differently. At NFE 20, the deterministic Heun trajectory appears too coarse: it has few correction opportunities and is vulnerable to discretization error or poor coverage of the sampling trajectory. Injecting stochasticity helped substantially, likely because churn reintroduces noise at intermediate levels and lets the sampler explore a broader local region before denoising. The monotonic trend was not perfect, but higher churn remained beneficial across the tested range, with the strongest tested setting giving the best FID.
+
+At NFE 50, the baseline has enough model evaluations for deterministic Heun to work well. In that regime, extra stochasticity may no longer solve the dominant error and can instead disturb an already effective trajectory. The Euler result supports the same interpretation: simply reallocating the budget into more first-order steps is not necessarily better than fewer second-order Heun steps. For this pretrained CIFAR-10 checkpoint, Heun's correction step seems especially valuable at the moderate budget.
+
+\section{Conclusion}
+
+The final sampler improvement depends strongly on the NFE budget. For NFE $\leq 20$, the best sampler found by the AutoResearch agent was stochastic EDM Heun with high churn, improving FID from 55.9529 to 10.1439. This is a large improvement and shows that stochastic updates are important for this low-budget case. For NFE $\leq 50$, the original deterministic EDM Heun baseline remained best among the attempted modifications, with FID 7.6761. The AutoResearch process therefore found a useful budget-specific modification rather than a single change that improved both settings.
+
+\end{document}

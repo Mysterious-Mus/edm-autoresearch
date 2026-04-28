@@ -1,0 +1,25 @@
+$ /opt/conda/bin/python /workspaces/edm/fid.py calc --images=/workspaces/edm/autoresearch/tasks/nfe20/runs/000-baseline/images --ref=https://nvlabs-fi-cdn.nvidia.com/edm/fid-refs/cifar10-32x32.npz --num=5000 --batch=64
+
+Loading dataset reference statistics from "https://nvlabs-fi-cdn.nvidia.com/edm/fid-refs/cifar10-32x32.npz"...
+Loading Inception-v3 model...
+Loading images from "/workspaces/edm/autoresearch/tasks/nfe20/runs/000-baseline/images"...
+Calculating statistics for 5000 images...
+
+  0%|          | 0/79 [00:00<?, ?batch/s]
+  1%|▏         | 1/79 [00:04<05:44,  4.41s/batch]
+  9%|▉         | 7/79 [00:04<00:34,  2.10batch/s]
+ 16%|█▋        | 13/79 [00:04<00:14,  4.56batch/s]
+ 24%|██▍       | 19/79 [00:04<00:07,  7.70batch/s]
+ 30%|███       | 24/79 [00:04<00:05,  9.90batch/s]
+ 38%|███▊      | 30/79 [00:05<00:03, 14.31batch/s]
+ 46%|████▌     | 36/79 [00:05<00:02, 19.26batch/s]
+ 53%|█████▎    | 42/79 [00:05<00:01, 24.54batch/s]
+ 61%|██████    | 48/79 [00:05<00:01, 29.70batch/s]
+ 68%|██████▊   | 54/79 [00:05<00:00, 34.97batch/s]
+ 76%|███████▌  | 60/79 [00:05<00:00, 39.37batch/s]
+ 84%|████████▎ | 66/79 [00:05<00:00, 43.22batch/s]
+ 91%|█████████ | 72/79 [00:05<00:00, 46.08batch/s]
+ 99%|█████████▊| 78/79 [00:05<00:00, 48.35batch/s]
+100%|██████████| 79/79 [00:06<00:00, 12.45batch/s]
+Calculating FID...
+55.9529

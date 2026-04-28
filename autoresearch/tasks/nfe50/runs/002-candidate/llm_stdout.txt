@@ -1,0 +1,20 @@
+[proposal]
+name = "edm-linear-heun-churn-nfe50"
+hypothesis = "Introducing moderate stochasticity via S_churn may improve sample diversity and quality under the same NFE budget by allowing small noise injection during sampling, potentially escaping local optima."
+timestep_or_noise_schedule = "edm discretization with linear sigma schedule"
+update_rule = "heun"
+solver_type = "heun"
+stochastic_updates = "enabled with S_churn=20, S_min=0.05, S_max=50, S_noise=1.003"
+budget_allocation = "maximum number of Heun steps under the fixed NFE budget"
+score_manipulation = "none"
+
+[sampler]
+solver = "heun"
+discretization = "edm"
+schedule = "linear"
+scaling = "none"
+rho = 7
+S_churn = 20
+S_min = 0.05
+S_max = 50
+S_noise = 1.003

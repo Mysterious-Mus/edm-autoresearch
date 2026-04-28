@@ -1,0 +1,23 @@
+# Agent-editable experiment config for the moderate-budget assignment case.
+# Use with a fixed config whose [run].nfe_budget is 50.
+
+[proposal]
+name = "baseline-nfe50-heun-edm"
+hypothesis = "Record the baseline EDM-style Heun sampler at the fixed NFE 50 budget."
+timestep_or_noise_schedule = "edm discretization with linear sigma schedule"
+update_rule = "heun"
+solver_type = "heun"
+stochastic_updates = "disabled"
+budget_allocation = "maximum number of Heun steps under the fixed NFE budget"
+score_manipulation = "none"
+
+[sampler]
+solver = "heun"
+discretization = "edm"
+schedule = "linear"
+scaling = "none"
+rho = 7
+S_churn = 0
+S_min = 0
+S_max = inf
+S_noise = 1

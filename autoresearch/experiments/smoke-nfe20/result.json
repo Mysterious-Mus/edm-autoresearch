@@ -1,0 +1,40 @@
+{
+  "status": "completed",
+  "experiment_dir": "/workspaces/edm/autoresearch/experiments/smoke-nfe20",
+  "fixed_config": "/workspaces/edm/autoresearch/fixed_smoke.toml",
+  "experiment_config": "/workspaces/edm/autoresearch/experiments/smoke-nfe20/config.toml",
+  "fixed_config_sha256": "924c284aff2e37edce3dc4bf07c001dea62c9f10b0d2d79f66e3106883e7dd75",
+  "experiment_config_sha256": "3b45c368574c5449610e4c4a986badffbe85a7ae081639ca4af37272374f8b1f",
+  "seed_count": 4,
+  "nfe_budget": 20,
+  "num_steps": 10,
+  "actual_nfe": 19,
+  "solver": "heun",
+  "images_dir": "/workspaces/edm/autoresearch/experiments/smoke-nfe20/images",
+  "generation": {
+    "command": [
+      "/opt/conda/bin/python",
+      "/workspaces/edm/generate.py",
+      "--outdir=/workspaces/edm/autoresearch/experiments/smoke-nfe20/images",
+      "--seeds=0-3",
+      "--batch=4",
+      "--steps=10",
+      "--network=https://nvlabs-fi-cdn.nvidia.com/edm/pretrained/baseline/baseline-cifar10-32x32-uncond-vp.pkl",
+      "--rho=7",
+      "--S_churn=0",
+      "--S_min=0",
+      "--S_max=inf",
+      "--S_noise=1",
+      "--solver=heun",
+      "--disc=edm",
+      "--schedule=linear",
+      "--scaling=none"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 4.217,
+    "log": "/workspaces/edm/autoresearch/experiments/smoke-nfe20/generate.log",
+    "stdout_tail": "Loading network from \"https://nvlabs-fi-cdn.nvidia.com/edm/pretrained/baseline/baseline-cifar10-32x32-uncond-vp.pkl\"...\nGenerating 4 images to \"/workspaces/edm/autoresearch/experiments/smoke-nfe20/images\"...\n\n  0%|          | 0/1 [00:00<?, ?batch/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.18batch/s]\n100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1/1 [00:00<00:00,  1.18batch/s]\nDone.\n"
+  },
+  "completed_at": "2026-04-28T08:09:51Z",
+  "agent_report": "/workspaces/edm/autoresearch/experiments/smoke-nfe20/agent_report.json"
+}

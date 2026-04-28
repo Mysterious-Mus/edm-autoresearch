@@ -1,0 +1,36 @@
+{
+  "proposal": {
+    "name": "baseline-heun-edm-nfe20",
+    "hypothesis": "Baseline EDM-style Heun sampler under the fixed NFE 20 budget.",
+    "timestep_or_noise_schedule": "edm discretization with linear sigma schedule",
+    "update_rule": "heun",
+    "solver_type": "heun",
+    "stochastic_updates": "disabled",
+    "budget_allocation": "maximum number of Heun steps under the fixed NFE budget",
+    "score_manipulation": "none"
+  },
+  "sampler": {
+    "solver": "heun",
+    "discretization": "edm",
+    "schedule": "linear",
+    "scaling": "none",
+    "rho": 7,
+    "S_churn": 0,
+    "S_min": 0,
+    "S_max": Infinity,
+    "S_noise": 1
+  },
+  "result": {
+    "status": "completed",
+    "fid": 55.9529,
+    "fid_enabled": true,
+    "nfe_budget": 20,
+    "actual_nfe": 19,
+    "num_steps": 10,
+    "seed_count": 5000,
+    "solver": "heun",
+    "generation_seconds": 42.347,
+    "fid_seconds": 12.894,
+    "completed_at": "2026-04-28T12:44:31Z"
+  }
+}

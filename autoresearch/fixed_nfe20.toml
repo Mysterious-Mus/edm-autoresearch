@@ -1,0 +1,20 @@
+# Immutable assignment/run controls for the NFE 20 case.
+# The AutoResearch agent should not edit this file when proposing sampler changes.
+
+[model]
+dataset = "cifar10-32x32"
+network = "https://nvlabs-fi-cdn.nvidia.com/edm/pretrained/baseline/baseline-cifar10-32x32-uncond-vp.pkl"
+
+[run]
+seeds = "0-4999"
+batch = 64
+nfe_budget = 20
+outdir_name = "images"
+subdirs = false
+nproc_per_node = 1
+
+[evaluation]
+compute_fid = true
+num_images = 5000
+batch = 64
+reference_stats = "https://nvlabs-fi-cdn.nvidia.com/edm/fid-refs/cifar10-32x32.npz"

@@ -1,0 +1,36 @@
+{
+  "proposal": {
+    "name": "ve-linear-heun-nfe50",
+    "hypothesis": "Testing VE discretization with linear schedule, which may provide a different noise trajectory and improve sample quality under the same NFE budget.",
+    "timestep_or_noise_schedule": "ve discretization with linear sigma schedule",
+    "update_rule": "heun",
+    "solver_type": "heun",
+    "stochastic_updates": "disabled",
+    "budget_allocation": "maximum number of Heun steps under the fixed NFE budget",
+    "score_manipulation": "none"
+  },
+  "sampler": {
+    "solver": "heun",
+    "discretization": "ve",
+    "schedule": "linear",
+    "scaling": "none",
+    "rho": 7,
+    "S_churn": 0,
+    "S_min": 0,
+    "S_max": Infinity,
+    "S_noise": 1
+  },
+  "result": {
+    "status": "completed",
+    "fid": 8.31394,
+    "fid_enabled": true,
+    "nfe_budget": 50,
+    "actual_nfe": 49,
+    "num_steps": 25,
+    "seed_count": 5000,
+    "solver": "heun",
+    "generation_seconds": 160.213,
+    "fid_seconds": 12.332,
+    "completed_at": "2026-04-28T13:09:11Z"
+  }
+}

@@ -1,0 +1,19 @@
+# Small fixed config for checking plumbing quickly. Not for assignment scores.
+
+[model]
+dataset = "cifar10-32x32"
+network = "https://nvlabs-fi-cdn.nvidia.com/edm/pretrained/baseline/baseline-cifar10-32x32-uncond-vp.pkl"
+
+[run]
+seeds = "0-3"
+batch = 4
+nfe_budget = 20
+outdir_name = "images"
+subdirs = false
+nproc_per_node = 1
+
+[evaluation]
+compute_fid = false
+num_images = 4
+batch = 64
+reference_stats = "https://nvlabs-fi-cdn.nvidia.com/edm/fid-refs/cifar10-32x32.npz"
